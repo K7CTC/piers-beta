@@ -8,7 +8,6 @@
 #                                                                      #
 ########################################################################
 
-#import required modules
 import sys
 import sqlite3
 import csv
@@ -39,16 +38,12 @@ try:
             participant_state	            TEXT,
             participant_emergency_name	    TEXT,
             participant_emergency_phone	    TEXT,
-            PRIMARY KEY (participant_id)
-        );
-    ''')
+            PRIMARY KEY (participant_id));''')
     db.execute('''
         CREATE TABLE IF NOT EXISTS locations (
             location_id	                    INTEGER NOT NULL UNIQUE,
             location_name	                TEXT NOT NULL,
-            PRIMARY KEY(location_id)
-        );
-    ''')
+            PRIMARY KEY(location_id));''')
     db.execute('''
         CREATE TABLE IF NOT EXISTS sms (
             location_id                     INTEGER NOT NULL,
@@ -63,9 +58,7 @@ try:
             rssi                            INTEGER,
             snr                             INTEGER,
             duplicate	                    INTEGER,
-            FOREIGN KEY (location_id) REFERENCES stations (location_id)
-        );
-    ''')
+            FOREIGN KEY (location_id) REFERENCES locations (location_id));''')
     db.commit()
     with open('participants.csv') as csvfile:
         participants = csv.DictReader(csvfile)
@@ -90,8 +83,7 @@ try:
             participant_state,
             participant_emergency_name,
             participant_emergency_phone)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);
-    ''', to_db)
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);''', to_db)
     db.commit()
     with open('locations.csv') as csvfile:
         locations = csv.DictReader(csvfile)
@@ -102,8 +94,7 @@ try:
         INSERT INTO locations (
             location_id,
             location_name)
-        VALUES (?, ?);
-    ''', to_db)
+        VALUES (?, ?);''', to_db)
     db.commit()
     db.close()
 except:
