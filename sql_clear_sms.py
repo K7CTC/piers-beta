@@ -1,12 +1,10 @@
 ########################################################################
 #                                                                      #
-#          NAME:  PiERS - Clear SMS                                    #
+#          NAME:  PiERS - Clear SMS Table                              #
 #  DEVELOPED BY:  Chris Clement (K7CTC)                                #
-#       VERSION:  v1.1                                                 #
-#      LOCATION:  /home/pi/sql_clear_sms.py                            #
-#   DESCRIPTION:  This script simply deletes and recreates the sms     #
-#                 table from piers.sqlite3 thus purging all chat       #
-#                 history.                                             #
+#       VERSION:  v1.0                                                 #
+#   DESCRIPTION:  This script simply drops and recreates the sms       #
+#                 table from piers.db thus purging all chat history.   #
 #                                                                      #
 ########################################################################
 
@@ -19,29 +17,32 @@ if Path('piers.sqlite3').is_file() == False:
     print('ERROR: File not found - piers.sqlite3')
     sys.exit(1)
 
-conn = sqlite3.connect('piers.sqlite3')
-c = conn.cursor()
-c.execute('DROP TABLE IF EXISTS sms')
-conn.commit()
-c.execute('''
-    CREATE TABLE IF NOT EXISTS sms (
-        station_id      INTEGER NOT NULL,
-        message	        TEXT NOT NULL,
-        payload_raw     TEXT NOT NULL,
-        payload_hex     TEXT NOT NULL,
-        time_queued	    INTEGER,
-        time_on_air	    INTEGER,
-        time_sent	    INTEGER,
-        tx_count        INTEGER,
-        time_received	INTEGER,
-        rssi            INTEGER,
-        snr             INTEGER,
-        duplicate	    INTEGER,
-        FOREIGN KEY (station_id) REFERENCES stations (station_id)
-    )
-''')
-conn.commit()
-c.close()
-conn.close()
-print('DONE!')
-sys.exit(0)
+try:
+    db = sqlite3.connect('piers.db')
+    db.execute('DROP TABLE IF EXISTS sms')
+    db.commit()
+    db.execute('''
+        CREATE TABLE IF NOT EXISTS sms (
+            location_id     INTEGER NOT NULL,
+            message	        TEXT NOT NULL,
+            payload_raw     TEXT NOT NULL,
+            payload_hex     TEXT NOT NULL,
+            time_queued	    INTEGER,
+            time_on_air	    INTEGER,
+            time_sent	    INTEGER,
+            tx_count        INTEGER,
+            time_received	INTEGER,
+            rssi            INTEGER,
+            snr             INTEGER,
+            duplicate	    INTEGER,
+            FOREIGN KEY (location_id) REFERENCES stations (location_id)
+        );
+    ''')
+    db.commit()
+    db.close()
+except:
+    print('FAIL!')
+    sys.exit(1)
+else:
+    print('PASS!')
+    sys.exit(0)
