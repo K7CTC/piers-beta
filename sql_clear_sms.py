@@ -13,8 +13,8 @@ import sys
 import sqlite3
 from pathlib import Path
 
-if Path('piers.sqlite3').is_file() == False:
-    print('ERROR: File not found - piers.sqlite3')
+if Path('piers.db').is_file() == False:
+    print('ERROR: File not found - piers.db')
     sys.exit(1)
 
 try:
