@@ -38,8 +38,8 @@ if my_location_id < 1 or my_location_id > 99:
 
 rowid_marker = 0
 
-conn = sqlite3.connect('piers.db')
-c = conn.cursor()
+db = sqlite3.connect('piers.db')
+c = db.cursor()
 while True:
     try:    
         #get all rows with rowid greater than rowid_marker
@@ -58,44 +58,44 @@ while True:
             NATURAL JOIN
                 sms
             WHERE
-                sms.rowid>? AND (duplicate='N' OR duplicate IS NULL)''',
+                sms.rowid>? AND (duplicate='N' OR duplicate IS NULL);''',
                 (rowid_marker,))
         for row in c.fetchall():
             print()
-            if row[0] == location_id:
+            if row[0] == my_location_id:
                 unix_ts = int(row[3]) / 1000
                 friendly_ts = datetime.datetime.fromtimestamp(unix_ts).strftime('%I:%M:%S %p')
-                sms_length = len(row[2])
-                if sms_length <= 11:
+                message_length = len(row[2])
+                if message_length <= 11:
                     right_align_whitespace = ' ' * 53
-                    sms_padding = ' ' * (11 - sms_length)
+                    message_padding = ' ' * (11 - message_length)
                     print(f'{right_align_whitespace}┌─────────────┐')
-                    print(f'{right_align_whitespace}│ {sms_padding}{row[2]} │')
+                    print(f'{right_align_whitespace}│ {message_padding}{row[2]} │')
                     print(f'{right_align_whitespace}└┤{friendly_ts}├┘')
                 else:
-                    right_align_length = 64 - sms_length
+                    right_align_length = 64 - message_length
                     right_align_whitespace = ' ' * right_align_length
-                    border_top = '─' * sms_length
-                    border_bottom = '─' * (sms_length - 12)
+                    border_top = '─' * message_length
+                    border_bottom = '─' * (message_length - 12)
                     print(f'{right_align_whitespace}┌─{border_top}─┐')
                     print(f'{right_align_whitespace}│ {row[2]} │')
                     print(f'{right_align_whitespace}└─{border_bottom}┤{friendly_ts}├┘')
             else:
                 unix_ts = int(row[4]) / 1000
                 friendly_ts = datetime.datetime.fromtimestamp(unix_ts).strftime('%I:%M:%S %p')
-                sms_length = len(row[2])
-                if sms_length <= 11:
-                    sms_padding = ' ' * (11 - sms_length)
+                message_length = len(row[2])
+                if message_length <= 11:
+                    message_padding = ' ' * (11 - message_length)
                     print(f'┌─────────────┐')
-                    print(f'│ {row[2]}{sms_padding} │')
+                    print(f'│ {row[2]}{message_padding} │')
                     print(f'└┤{friendly_ts}├┘')
                 else:
-                    border_top = '─' * sms_length
-                    border_bottom = '─' * (sms_length - 12)
+                    border_top = '─' * message_length
+                    border_bottom = '─' * (message_length - 12)
                     print(f'┌─{border_top}─┐')
                     print(f'│ {row[2]} │')
                     print(f'└┤{friendly_ts}├{border_bottom}─┘')
-                    print(f'{(row[1])} (RSSI:{str(row[5])} SNR:{str(row[6])})')
+                    print(f'{row[1]} (RSSI:{str(row[5])} SNR:{str(row[6])})')
         #now we need to update the rowid_maker to reflect what we have
         #already printed to the console
         c.execute('SELECT MAX(rowid) FROM sms')
@@ -107,5 +107,5 @@ while True:
         print()
         break
 c.close()
-conn.close()
+db.close()
 sys.exit(0)
