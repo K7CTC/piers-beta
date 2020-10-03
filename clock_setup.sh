@@ -32,7 +32,7 @@ fi
 
 #disable fake-hwclock package
 echo "Disabling fake-hwclock..."
-sudo apt remove fake-hwclock -y &>> /dev/null
+sudo apt-get remove fake-hwclock -y &>> /dev/null
 if [ $? != 0 ]
 then
     echo "FAILURE!"
@@ -52,6 +52,18 @@ then
 fi
 
 #rewrite /lib/udev/hwclock-set
+echo "Generating: /lib/udev/hwclock-set..."
+sudo echo "#!/bin/sh" > /lib/udev/hwclock-set
+sudo echo "# Reset the System Clock to UTC if the hardware clock from which it" >> /lib/udev/hwclock-set
+sudo echo "# was copied by the kernel was in localtime." >> /lib/udev/hwclock-set
+sudo echo >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo "" >> /lib/udev/hwclock-set
+sudo echo >> /lib/udev/hwclock-set
 
 #set PiRTC time
 echo "Setting time on PiRTC based on current system time..."

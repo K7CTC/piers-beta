@@ -88,23 +88,23 @@ function installBase {
         exit 1
     fi
     
-    #update list of available packages
-    echo "Updating list of available packages..."
-    sudo apt-get update &>> /dev/null
-    if [ $? != 0 ]
-    then
-        echo "FAILURE!"
-        exit 1
-    fi
+    # #update list of available packages
+    # echo "Updating list of available packages..."
+    # sudo apt-get update &>> /dev/null
+    # if [ $? != 0 ]
+    # then
+    #     echo "FAILURE!"
+    #     exit 1
+    # fi
     
-    #apply latest raspbian patches
-    echo "Applying latest patches..."
-    sudo apt-get full-upgrade -y &>> /dev/null
-    if [ $? != 0 ]
-    then
-        echo "FAILURE!"
-        exit 1
-    fi
+    # #apply latest raspbian patches
+    # echo "Applying latest patches..."
+    # sudo apt-get full-upgrade -y &>> /dev/null
+    # if [ $? != 0 ]
+    # then
+    #     echo "FAILURE!"
+    #     exit 1
+    # fi
 
     #install required packages
     echo "Installing required packages..."
@@ -203,7 +203,7 @@ function installBase {
     sudo echo "#dtoverlay=disable-wifi" >> /boot/config.txt
     sudo echo >> /boot/config.txt
     sudo echo "#enable Adafruit PiRTC" >> /boot/config.txt
-    sudo echo "#dtoverlay=i2c-rtc,ds3231" >> /boot/config.txt
+    sudo echo "dtoverlay=i2c-rtc,ds3231" >> /boot/config.txt
 
     # #add user pi as a member of the www-data group
     # echo "Adding user \"pi\" as a member of group \"www-data\"..."
