@@ -11,7 +11,6 @@
 
 VERSION="v2020-08-20"
 SETSTATIONID="00"
-SETHOSTNAME="PiERS"
 SETAP="false"
 
 #piers setup requires root privileges 
@@ -20,51 +19,40 @@ if [ "`whoami`" != "root" ]
 then
     #inform user that they must run the command as root
     echo "  ERROR: Invalid command syntax. PiERS installation requires root priveleges."
-    echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
+    echo "  USAGE: sudo ./install.sh [required station id]"
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
     echo "EXAMPLE: sudo ./install.sh 03"
-    echo "         sudo ./install.sh 03 \"node3\""
     echo
     exit 1
 fi
 
-#verify correct number of command line parameters have been provided
-if [ $# -lt 1 ] || [ $# -gt 2 ]
+#verify correct number of command line arguments have been provided
+if [ $# -ne 1 ]
 then
     echo "  ERROR: Invalid command syntax. Unexpected number of arguments."
-    echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
+    echo "  USAGE: sudo ./install.sh [required station id]"
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
     echo "EXAMPLE: sudo ./install.sh 03"
-    echo "         sudo ./install.sh 03 \"node3\""
     echo
     exit 1
 fi
 
-#process command line arguments
-if [ $# -eq 1 ] || [ $# -eq 2 ]
+#process station id argument
+if [ $1 -gt 0 ] && [ $1 -lt 100 ]
 then
-    #process station id argument
-    if [ $1 -gt 0 ] && [ $1 -lt 100 ]
-    then
-        #store station id argument in global station id variable
-        SETSTATIONID=$1
-    else
-        #inform user that the station id is invalid
-        echo "  ERROR: Invalid command syntax. Unexpected Station ID value."
-        echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
-        echo "   HELP: Station ID is specified as an integer between 01 and 99."
-        echo
-        echo "EXAMPLE: sudo ./install.sh 03"
-        echo "         sudo ./install.sh 03 \"node3\""
-        echo
-        exit 1
-    fi
-elif [ $# -eq 2 ]
-then
-    #process hostname argument
-    SETHOSTNAME=$2
+    #store station id argument in global station id variable
+    SETSTATIONID=$1
+else
+    #inform user that the station id is invalid
+    echo "  ERROR: Invalid command syntax. Unexpected Station ID value."
+    echo "  USAGE: sudo ./install.sh [required station id]"
+    echo "   HELP: Station ID is specified as an integer between 01 and 99."
+    echo
+    echo "EXAMPLE: sudo ./install.sh 03"
+    echo
+    exit 1
 fi
 
 #check connectivity to raspbian.raspberrypi.org (needed to obtain required packages)
@@ -90,7 +78,7 @@ function installBase {
     #clear terminal window
     clear
     echo "Raspberry Pi Event Reporting System Installation Script" $VERSION
-    echo "═════════════════════════════════════════════════════════════════════"
+    echo "═══════════════════════════════════════════════════════════════════"
 
     #change keyboard layout to US
     echo "Changing keyboard layout to United States via raspi-config..."
@@ -371,8 +359,8 @@ function finish {
     #it's important that the hostname is the last system modification made by PiERS install
     #otherwise other steps will fail to execute.  that's why it's way down here with the
     #finish function.
-    echo "Changing hostname to $SETHOSTNAME via raspi-config..."
-    sudo raspi-config nonint do_hostname $SETHOSTNAME &>> /dev/null
+    echo "Changing hostname to PiERS via raspi-config..."
+    sudo raspi-config nonint do_hostname PiERS &>> /dev/null
     if [ $? != 0 ]
     then
         echo "FAILURE!"
