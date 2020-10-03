@@ -14,8 +14,22 @@ SETSTATIONID="00"
 SETHOSTNAME="PiERS"
 SETAP="false"
 
+#piers setup requires root privileges 
+#check to make sure user has executed the script via sudo
+if [ "`whoami`" != "root" ]
+then
+    #inform user that they must run the command as root
+    echo "  ERROR: Invalid command syntax. PiERS installation requires root priveleges."
+    echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
+    echo "   HELP: Station ID is specified as an integer between 01 and 99."
+    echo
+    echo "EXAMPLE: sudo ./install.sh 03"
+    echo
+    exit 1
+fi
+
 #verify correct number of command line parameters have been provided
-if [ $# -lt 1 ] || [ $# -gt 2]
+if [ $# -lt 1 ] || [ $# -gt 2 ]
 then
     echo "  ERROR: Invalid command syntax. Unexpected number of arguments."
     echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
@@ -28,7 +42,7 @@ then
 fi
 
 #process command line arguments
-if [ $# -eq 1 ] || [ $# -eq 2]
+if [ $# -eq 1 ] || [ $# -eq 2 ]
 then
     #process station id argument
     if [ $1 -gt 0 ] && [ $1 -lt 100 ]
@@ -49,20 +63,6 @@ elif [ $# -eq 2 ]
 then
     #process hostname argument
     SETHOSTNAME=$2
-fi
-
-#piers setup requires root privileges 
-#check to make sure user has executed the script via sudo
-if [ "`whoami`" != "root" ]
-then
-    #inform user that they must run the command as root
-    echo "  ERROR: Invalid command syntax. PiERS installation requires root priveleges."
-    echo "  USAGE: sudo ./install.sh [required station id] (optional hostname)"
-    echo "   HELP: Station ID is specified as an integer between 01 and 99."
-    echo
-    echo "EXAMPLE: sudo ./install.sh 03"
-    echo
-    exit 1
 fi
 
 #check connectivity to raspbian.raspberrypi.org (needed to obtain required packages)
