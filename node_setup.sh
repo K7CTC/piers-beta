@@ -36,7 +36,7 @@ then
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
     echo "EXAMPLE: sudo ./install.sh 03"
-    echo "         sudo ./install.sh 03 node3"
+    echo "         sudo ./install.sh 03 \"node3\""
     echo
     exit 1
 fi
@@ -179,7 +179,7 @@ function installBase {
     sudo echo "║   |  ____/  | | |  ___)   |  __  /   \____ \    ║" >> /etc/motd
     sudo echo "║   | |       | | | |_____  | |  \ \   _____) )   ║" >> /etc/motd
     sudo echo "║   |_|       |_| |_______) |_|   |_| (______/    ║" >> /etc/motd
-    sudo echo "║                                                 ║"
+    sudo echo "║                                                 ║" >> /etc/motd
     sudo echo "╚═══════╡ https://github.com/k7ctc/piers ╞════════╝" >> /etc/motd
     sudo echo >> /etc/motd
     sudo echo "Welcome to the Raspberry Pi Event Reporting System!" >> /etc/motd
