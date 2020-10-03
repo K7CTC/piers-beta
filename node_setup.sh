@@ -24,6 +24,7 @@ then
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
     echo "EXAMPLE: sudo ./install.sh 03"
+    echo "         sudo ./install.sh 03 \"node3\""
     echo
     exit 1
 fi
@@ -56,6 +57,7 @@ then
         echo "   HELP: Station ID is specified as an integer between 01 and 99."
         echo
         echo "EXAMPLE: sudo ./install.sh 03"
+        echo "         sudo ./install.sh 03 \"node3\""
         echo
         exit 1
     fi
