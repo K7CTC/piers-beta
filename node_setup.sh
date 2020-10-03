@@ -2,7 +2,7 @@
 
 ###########################################################
 #                                                         #
-#          TITLE: PiERS Node Setup Script                 #
+#          TITLE: PiERS - Node Setup                      #
 #   DEVELOPED BY: Chris Clement (K7CTC)                   #
 #    DESCRIPTION: Converts a stock 2020-08-20 Raspberry   #
 #                 Pi OS Lite image into a PiERS node.     #
@@ -18,11 +18,11 @@ SETAP="false"
 if [ "`whoami`" != "root" ]
 then
     #inform user that they must run the command as root
-    echo "  ERROR: Invalid command syntax. PiERS installation requires root priveleges."
-    echo "  USAGE: sudo ./install.sh [required station id]"
+    echo "  ERROR: Invalid command syntax. node_setup.sh requires root priveleges."
+    echo "  USAGE: sudo ./node_setup.sh [required station id]"
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
-    echo "EXAMPLE: sudo ./install.sh 03"
+    echo "EXAMPLE: sudo ./node_setup.sh 03"
     echo
     exit 1
 fi
@@ -31,10 +31,10 @@ fi
 if [ $# -ne 1 ]
 then
     echo "  ERROR: Invalid command syntax. Unexpected number of arguments."
-    echo "  USAGE: sudo ./install.sh [required station id]"
+    echo "  USAGE: sudo ./node_setup.sh [required station id]"
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
-    echo "EXAMPLE: sudo ./install.sh 03"
+    echo "EXAMPLE: sudo ./node_setup.sh 03"
     echo
     exit 1
 fi
@@ -47,10 +47,10 @@ then
 else
     #inform user that the station id is invalid
     echo "  ERROR: Invalid command syntax. Unexpected Station ID value."
-    echo "  USAGE: sudo ./install.sh [required station id]"
+    echo "  USAGE: sudo ./node_setup.sh [required station id]"
     echo "   HELP: Station ID is specified as an integer between 01 and 99."
     echo
-    echo "EXAMPLE: sudo ./install.sh 03"
+    echo "EXAMPLE: sudo ./node_setup.sh 03"
     echo
     exit 1
 fi
@@ -75,10 +75,9 @@ fi
 
 #function: required PiERS installation steps
 function installBase {
-    #clear terminal window
     clear
-    echo "Raspberry Pi Event Reporting System Installation Script" $VERSION
-    echo "═══════════════════════════════════════════════════════════════════"
+    echo "Raspberry Pi Event Reporting System - Node Setup" $VERSION
+    echo "════════════════════════════════════════════════════════════"
 
     #change keyboard layout to US
     echo "Changing keyboard layout to United States via raspi-config..."
@@ -202,6 +201,9 @@ function installBase {
     sudo echo >> /boot/config.txt
     sudo echo "#disable onboard wlan0 (uncomment if desired)" >> /boot/config.txt
     sudo echo "#dtoverlay=disable-wifi" >> /boot/config.txt
+    sudo echo >> /boot/config.txt
+    sudo echo "#enable Adafruit PiRTC" >> /boot/config.txt
+    sudo echo "#dtoverlay=i2c-rtc,ds3231" >> /boot/config.txt
 
     # #add user pi as a member of the www-data group
     # echo "Adding user \"pi\" as a member of group \"www-data\"..."
@@ -241,7 +243,33 @@ function installBase {
     #establish config file (set station id)
     echo "Generating: /home/pi/piers.conf..."
     echo $SETSTATIONID > /home/pi/piers.conf
-    sudo chown -v pi:pi /home/pi/piers.conf &>> /dev/null
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+
+    #copy piers application files into home directory
+    echo "Installing PiERS..."
+    cp /home/pi/git/piers/*.py /home/pi/
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+    cp /home/pi/git/piers/*.csv /home/pi/
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+    sudo chown pi:pi /home/pi/* &>> /dev/null
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+    sudo chmod +x /home/pi/*.py &>> /dev/null
     if [ $? != 0 ]
     then
         echo "FAILURE!"
@@ -369,7 +397,7 @@ function finish {
 
     echo
     echo "Finished!"
-    echo "═════════════════════════════════════════════════════════════════════"
+    echo "════════════════════════════════════════════════════════════"
     echo "It is recommended that you shutdown your PiERS node at this time and"
     echo "configure your hardware before next boot.  You can shutdown with the"
     echo "following command:"
