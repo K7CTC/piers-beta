@@ -88,23 +88,14 @@ function installBase {
         exit 1
     fi
     
-    # #update list of available packages
-    # echo "Updating list of available packages..."
-    # sudo apt-get update &>> /dev/null
-    # if [ $? != 0 ]
-    # then
-    #     echo "FAILURE!"
-    #     exit 1
-    # fi
-    
-    # #apply latest raspbian patches
-    # echo "Applying latest patches..."
-    # sudo apt-get full-upgrade -y &>> /dev/null
-    # if [ $? != 0 ]
-    # then
-    #     echo "FAILURE!"
-    #     exit 1
-    # fi
+    #change timezone to America/Denver (MST/MDT)
+    echo "Changing time zone to America/Denver (MST/MDT) via timedatectl..."
+    sudo timedatectl set-timezone America/Denver &>> /dev/null
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
 
     #install required packages
     echo "Installing required packages..."
