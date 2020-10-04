@@ -73,7 +73,7 @@ sudo echo "> /run/udev/hwclock-set" >> /lib/udev/hwclock-set
 sudo echo >> /lib/udev/hwclock-set
 
 #set PiRTC time
-echo "Setting time on PiRTC based on current system time..."
+echo "Setting PiRTC via pool.ntp.org..."
 sudo hwclock -w &>> /dev/null
 if [ $? != 0 ]
 then
