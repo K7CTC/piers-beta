@@ -114,6 +114,24 @@ function installBase {
         exit 1
     fi
 
+    #enable SSH
+    echo "Enabling SSH via raspi-config..."
+    sudo raspi-config nonint do_ssh 0 &>> /dev/null
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+
+    #enable I2C
+    echo "Enabling I2C via raspi-config..."
+    sudo raspi-config nonint do_i2c 0 &>> /dev/null
+    if [ $? != 0 ]
+    then
+        echo "FAILURE!"
+        exit 1
+    fi
+
     #configure firewall
     echo "Configuring firewall..."
     echo "    *allow SSH"
@@ -177,24 +195,9 @@ function installBase {
     sudo echo >> /boot/config.txt
     sudo echo "#enable Adafruit PiRTC" >> /boot/config.txt
     sudo echo "dtoverlay=i2c-rtc,ds3231" >> /boot/config.txt
-
-    #enable SSH
-    echo "Enabling SSH via raspi-config..."
-    sudo raspi-config nonint do_ssh 0 &>> /dev/null
-    if [ $? != 0 ]
-    then
-        echo "FAILURE!"
-        exit 1
-    fi
-
-    #enable I2C
-    echo "Enabling I2C via raspi-config..."
-    sudo raspi-config nonint do_i2c 0 &>> /dev/null
-    if [ $? != 0 ]
-    then
-        echo "FAILURE!"
-        exit 1
-    fi
+    sudo echo >> /boot/config.txt
+    sudo echo "#enable i2c" >> /boot/config.txt
+    sudo echo "dtparam=i2c_arm=on" >> /boot/config.txt
 
     # #add user pi as a member of the www-data group
     # echo "Adding user \"pi\" as a member of group \"www-data\"..."

@@ -54,23 +54,8 @@ fi
 #rewrite /lib/udev/hwclock-set
 echo "Generating: /lib/udev/hwclock-set..."
 sudo echo "#!/bin/sh" > /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
-sudo echo "if [ -e /run/udev/hwclock-set ] ; then" >> /lib/udev/hwclock-set
-sudo echo "    exit 0" >> /lib/udev/hwclock-set
-sudo echo "fi" >> /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
-sudo echo "if [ -f /etc/default/rcS ] ; then" >> /lib/udev/hwclock-set
-sudo echo "    . /etc/default/rcS" >> /lib/udev/hwclock-set
-sudo echo "fi" >> /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
-sudo echo "if [ -f /etc/default/hwclock ] ; then" >> /lib/udev/hwclock-set
-sudo echo "    . /etc/default/hwclock" >> /lib/udev/hwclock-set
-sudo echo "fi" >> /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
 sudo echo "/sbin/hwclock --hctosys" >> /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
 sudo echo "> /run/udev/hwclock-set" >> /lib/udev/hwclock-set
-sudo echo >> /lib/udev/hwclock-set
 
 #set PiRTC time
 echo "Setting PiRTC via pool.ntp.org..."
