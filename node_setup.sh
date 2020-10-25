@@ -13,8 +13,7 @@ VERSION="v2020-08-20"
 SETSTATIONID="00"
 SETAP="false"
 
-#piers setup requires root privileges 
-#check to make sure user has executed the script via sudo
+#requires root privileges 
 if [ "`whoami`" != "root" ]
 then
     #inform user that they must run the command as root
@@ -64,14 +63,14 @@ then
     exit 1
 fi
 
-#check connectivity to github.com (we'll need this server to obtain required resources)
-ping github.com -c 1 &>> /dev/null
-if [ $? != 0 ]
-then
-    echo "Unable to communicate with github.com at this time."
-    echo "Please check your network connection and try again."
-    exit 1
-fi
+# #check connectivity to github.com (we'll need this server to obtain required resources)
+# ping github.com -c 1 &>> /dev/null
+# if [ $? != 0 ]
+# then
+#     echo "Unable to communicate with github.com at this time."
+#     echo "Please check your network connection and try again."
+#     exit 1
+# fi
 
 #function: required PiERS installation steps
 function installBase {
@@ -165,6 +164,26 @@ function installBase {
     sudo echo "Welcome to the Raspberry Pi Event Reporting System!" >> /etc/motd
     sudo echo "Enjoy your stay..." >> /etc/motd
     sudo echo >> /etc/motd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     #generate /boot/config.txt
     echo "Generating: /boot/config.txt..."

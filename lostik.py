@@ -100,9 +100,9 @@ set_cr = b''.join([b'4/', bytes(str(args.cr), 'ASCII')])
 set_wdt = bytes(str(args.wdt), 'ASCII')
 
 #verify existence of PiERS database before proceeding
-if Path('piers.sqlite3').is_file() == False:
-    print('ERROR: File not found - piers.sqlite3')
-    logging.error('File not found - piers.sqlite3')
+if Path('piers.db').is_file() == False:
+    print('ERROR: File not found - piers.db')
+    logging.error('File not found - piers.db')
     sys.exit(1)
 
 ########################################################################
@@ -327,7 +327,7 @@ def lostik_tx_cycle(payload_hex):
         logging.warning('Transmit failure! Unable to halt LoStik continuous receive mode.')
         return False
 
-#function: get next tx payload from piers.sqlite3
+#function: get next tx payload from piers.db
 
 
 

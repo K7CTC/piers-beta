@@ -10,8 +10,7 @@
 #                                                         #
 ###########################################################
 
-#piers setup requires root privileges 
-#check to make sure user has executed the script via sudo
+#requires root privileges 
 if [ "`whoami`" != "root" ]
 then
     #inform user that they must run the command as root
